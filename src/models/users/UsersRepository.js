@@ -1,10 +1,14 @@
+import db from "../../database/index.js";
+
 export default class UsersRepository {
   constructor() {
-    this.users = [];
+    this.db = db;
   }
 
-  getUsers() {
-    return this.users;
+  async getUsers() {
+    const allUsers = await this.db.manyOrNone("SELECT * FROM users");
+    console.log(allUsers);
+    return allUsers;
   }
 
   getUserById(id) {
