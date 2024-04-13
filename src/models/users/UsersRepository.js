@@ -7,40 +7,50 @@ export default class UsersRepository {
 
   async getUsers() {
     const allUsers = await this.db.manyOrNone("SELECT * FROM users");
-    console.log(allUsers);
+    // console.log(allUsers);
     return allUsers;
   }
 
-  getUserById(id) {
-    const user = this.users.find((user) => user.id === id);
+  async getUserById(id) {
+    const user = await this.db.oneOrNone(
+      "SELECT * FROM users WHERE id = $1",
+      id
+    );
     return user;
   }
 
-  getUserByEmail(email) {
-    const user = this.users.find((user) => user.email === email);
+  async getUserByEmail(email) {
+    const user = await this.db.oneOrNone(
+      "SELECT * FROM users WHERE email = $1",
+      email
+    );
     return user;
   }
 
-  createUser(user) {
-    this.users.push(user);
+  async createUser(user) {
+    await this.db.none(
+      "INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4)",
+      [user.id, user.name, user.email, user.password]
+    );
     return user;
   }
 
-  updateUser(id, name, email, password) {
-    const user = this.getUserById(id);
+  async updateUser(id, name, email, password) {
+    const user = await this.getUserById(id);
 
     if (!user) {
       return null;
     }
 
-    user.name = name;
-    user.email = email;
-    user.password = password;
+    const updatedUser = await this.db.one(
+      "UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4 RETURNING *",
+      [name, email, password, id]
+    );
 
-    return user;
+    return updatedUser;
   }
 
-  deleteUser(id) {
-    this.users = this.users.filter((user) => user.id !== id);
+  async deleteUser(id) {
+    await this.db.none("DELETE FROM users WHERE id = $1", id);
   }
 }
