@@ -1,5 +1,7 @@
 import pgp from "pg-promise";
 import { config } from "dotenv";
+import path, { join } from "path";
+import { fileURLToPath } from "url";
 
 config();
 
@@ -21,10 +23,21 @@ const dbURL =
   "/" +
   database;
 
-export default function createConnection() {
-  const db = pgp()(dbURL);
+const db = pgp()(dbURL);
 
+export function createConnection() {
   db.query("SELECT 1 + 1 AS result").then((result) => {
     console.log(result);
   });
 }
+
+// Captura o caminho do arquivo atual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const filePath = join(__dirname, "create-tables.sql");
+const query = new pgp.QueryFile(filePath);
+
+db.query(query);
+
+export default db;
