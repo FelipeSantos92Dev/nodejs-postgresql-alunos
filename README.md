@@ -225,6 +225,8 @@ export default class UsersRepository {
 }
 ```
 
+9. Implementação de métodos assíncronos no arquivo `users.controller.js`
+
 ## Autor
 
 [Felipe Santos](https://github.com/FelipeSantos92Dev)
