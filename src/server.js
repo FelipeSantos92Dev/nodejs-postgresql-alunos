@@ -1,6 +1,9 @@
 import express from "express";
 import { config } from "dotenv";
 import { router } from "./routes/index.routes.js";
+import createConnection from "./database/index.js";
+
+createConnection();
 
 config();
 

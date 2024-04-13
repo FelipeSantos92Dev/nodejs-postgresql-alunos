@@ -35,7 +35,18 @@ Para instalar o projeto, siga os passos abaixo:
 
 ## Etapas de integração com o banco de dados PostgreSQL
 
-1. Criar um arquivo `.env` na raiz do projeto para armazenar as variáveis de ambiente
+1. Criação da base de dados
+
+```bash
+sudo su - postgres
+psql
+```
+
+```sql
+CREATE DATABASE users_pg_dev;
+```
+
+2. Criar um arquivo `.env` na raiz do projeto para armazenar as variáveis de ambiente
 
 ```env
 DB_USER=user
@@ -45,7 +56,7 @@ DB_PORT=5432
 DB_NAME=database
 ```
 
-2. Instalar a biblioteca `pg-promise` para integração com o banco de dados PostgreSQL
+3. Instalar a biblioteca `pg-promise` para integração com o banco de dados PostgreSQL
 
 ```bash
 npm install pg-promise
