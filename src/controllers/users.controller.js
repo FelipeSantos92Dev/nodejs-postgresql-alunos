@@ -5,8 +5,8 @@ import UsersRepository from "../models/users/UsersRepository.js";
 
 const usersRepository = new UsersRepository();
 
-export const getUsers = (req, res) => {
-  const users = usersRepository.getUsers();
+export const getUsers = async (req, res) => {
+  const users = await usersRepository.getUsers();
 
   if (!users) {
     return res.status(404).send({ message: "Não há usuários cadastrados" });
@@ -14,10 +14,10 @@ export const getUsers = (req, res) => {
   return res.status(200).send({ totalUsers: users.length, users });
 };
 
-export const getUserById = (req, res) => {
+export const getUserById = async (req, res) => {
   const { id } = req.params;
 
-  const user = usersRepository.getUserById(id);
+  const user = await usersRepository.getUserById(id);
 
   if (!user) {
     return res.status(404).send({ message: "Usuário não encontrado" });
@@ -29,7 +29,7 @@ export const getUserById = (req, res) => {
 export const createUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  const userAlreadyExists = usersRepository.getUserByEmail(email);
+  const userAlreadyExists = await usersRepository.getUserByEmail(email);
 
   if (userAlreadyExists) {
     return res.status(409).send({ message: "Usuário já cadastrado" });
@@ -39,7 +39,7 @@ export const createUser = async (req, res) => {
 
   const user = new User(name, email, passwordHash);
 
-  usersRepository.createUser(user);
+  await usersRepository.createUser(user);
 
   return res.status(201).send({ message: "Usuário criado com sucesso", user });
 };
@@ -48,8 +48,8 @@ export const updateUser = async (req, res) => {
   const { id } = req.params;
   const { name, email, password } = req.body;
 
-  const userById = usersRepository.getUserById(id);
-  const userByEmail = usersRepository.getUserByEmail(email);
+  const userById = await usersRepository.getUserById(id);
+  const userByEmail = await usersRepository.getUserByEmail(email);
 
   if (!userById) {
     return res.status(404).send({ message: "Usuário não encontrado" });
@@ -61,23 +61,23 @@ export const updateUser = async (req, res) => {
 
   const passwordHash = await hash(password, 8);
 
-  const user = usersRepository.updateUser(id, name, email, passwordHash);
+  const user = await usersRepository.updateUser(id, name, email, passwordHash);
 
   return res
     .status(200)
     .send({ message: "Usuário atualizado com sucesso", user });
 };
 
-export const deleteUser = (req, res) => {
+export const deleteUser = async (req, res) => {
   const { id } = req.params;
 
-  const user = usersRepository.getUserById(id);
+  const user = await usersRepository.getUserById(id);
 
   if (!user) {
     return res.status(404).send({ message: "Usuário não encontrado" });
   }
 
-  usersRepository.deleteUser(id);
+  await usersRepository.deleteUser(id);
 
   return res
     .status(200)
