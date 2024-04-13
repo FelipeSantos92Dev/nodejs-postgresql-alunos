@@ -62,6 +62,60 @@ DB_NAME=database
 npm install pg-promise
 ```
 
+4. Criar um arquivo `database/index.js` na raiz do projeto para configurar a conexão com o banco de dados
+
+```javascript
+import pgp from "pg-promise";
+import { config } from "dotenv";
+
+config();
+
+const user = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
+const host = process.env.DB_HOST;
+const port = process.env.DB_PORT;
+const database = process.env.DB_NAME;
+
+const dbURL =
+  "postgres://" +
+  user +
+  ":" +
+  password +
+  "@" +
+  host +
+  ":" +
+  port +
+  "/" +
+  database;
+
+export default function createConnection() {
+  const db = pgp()(dbURL);
+
+  db.query("SELECT 1 + 1 AS result").then((result) => {
+    console.log(result);
+  });
+}
+```
+
+5. Importar a função `createConnection` no arquivo `server.js` e chamar a função para testar a conexão com o banco de dados
+
+```javascript
+import createConnection from "./database/index.js";
+
+createConnection();
+```
+
+6. Criação da tabela `users`
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL
+);
+```
+
 ## Autor
 
 [Felipe Santos](https://github.com/FelipeSantos92Dev)
