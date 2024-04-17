@@ -105,7 +105,7 @@ import createConnection from "./database/index.js";
 createConnection();
 ```
 
-6. Criação da tabela `users`
+6. Criação da tabela `users` no arquivo `database/create-tables.sql`
 
 ```sql
 CREATE TABLE IF NOT EXISTS users (

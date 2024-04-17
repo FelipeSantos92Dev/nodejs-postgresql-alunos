@@ -21,8 +21,8 @@ export const getStudent = (req, res) => {
 };
 
 export const createStudent = (req, res) => {
-  const { name, age } = req.body;
-  const student = new Student(name, age);
+  const { name, age, email, code, grade } = req.body;
+  const student = new Student(name, age, email, code, grade);
 
   studentsRepository.addStudent(student);
 
@@ -31,13 +31,13 @@ export const createStudent = (req, res) => {
 
 export const updateStudent = (req, res) => {
   const { id } = req.params;
-  const { name, age } = req.body;
+  const { name, age, email, code, grade } = req.body;
 
   const student = studentsRepository.getStudentById(id);
 
   if (!student) res.status(404).send({ message: "Estudante não encontrado!" });
 
-  studentsRepository.updateStudent(id, name, age);
+  studentsRepository.updateStudent(id, name, age, email, code, grade);
 
   return res.send(student);
 };
